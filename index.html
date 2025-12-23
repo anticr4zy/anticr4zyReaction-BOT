@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WHATSPLODE 🚀 - Auto React WhatsApp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #075e54, #128c7e);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #25d366, #128c7e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            color: #ddd;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(255, 50, 50, 0.3);
+            border-radius: 20px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .status-indicator.active {
+            background: rgba(50, 255, 50, 0.3);
+        }
+        
+        .qr-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+        }
+        
+        #qrCode {
+            width: 250px;
+            height: 250px;
+            margin: 20px auto;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .control-group {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .control-group h3 {
+            color: #25d366;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .emoji-btn {
+            font-size: 24px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .emoji-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .emoji-btn.active {
+            background: #25d366;
+            transform: scale(1.1);
+        }
+        
+        .input-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ddd;
+            font-weight: 500;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #25d366;
+            box-shadow: 0 0 10px rgba(37, 211, 102, 0.5);
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #25d366, #128c7e);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-stop {
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #25d366;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: #ddd;
+            font-size: 14px;
+        }
+        
+        .log-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: monospace;
+            font-size: 13px;
+        }
+        
+        .log-time {
+            color: #25d366;
+        }
+        
+        .log-message {
+            color: white;
+        }
+        
+        .connection-status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 50, 50, 0.2);
+        }
+        
+        .connection-status.connected {
+            background: rgba(50, 255, 50, 0.2);
+        }
+        
+        .presets {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .preset-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .preset-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .emoji-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🚀</div>
+            <h1>WHATSPLODE AUTO REACT</h1>
+            <div class="subtitle">Automatically react to WhatsApp messages with custom emojis</div>
+            <div class="status-indicator" id="statusIndicator">🔴 DISCONNECTED</div>
+        </div>
+        
+        <!-- QR Code Section -->
+        <div class="qr-section">
+            <h2>🔗 Connect WhatsApp Web</h2>
+            <p>Scan QR Code below to connect your WhatsApp</p>
+            <div id="qrCode"></div>
+            <button class="btn" onclick="generateQR()" id="qrBtn">🔄 Generate New QR Code</button>
+            <div class="connection-status" id="connectionStatus">
+                ❌ WhatsApp not connected
+            </div>
+        </div>
+        
+        <!-- Controls -->
+        <div class="controls">
+            <!-- Reaction Settings -->
+            <div class="control-group">
+                <h3>🎭 SELECT REACTIONS</h3>
+                <div class="emoji-grid" id="emojiGrid">
+                    <!-- Emojis will be added by JavaScript -->
+                </div>
+                <div class="input-group">
+                    <label>Custom Emojis (comma separated):</label>
+                    <input type="text" id="customEmojis" placeholder="😂,❤️,🔥,👍,🎉">
+                </div>
+                <button class="btn" onclick="updateEmojiList()">🔄 Update Emoji List</button>
+            </div>
+            
+            <!-- Target Settings -->
+            <div class="control-group">
+                <h3>🎯 TARGET SETTINGS</h3>
+                <div class="input-group">
+                    <label>Target Person/Group:</label>
+                    <input type="text" id="targetName" placeholder="Contact name or group name">
+                </div>
+                <div class="input-group">
+                    <label>React to:</label>
+                    <select id="reactTarget">
+                        <option value="all">All messages</option>
+                        <option value="specific">Specific words/phrases</option>
+                        <option value="sender">Specific sender only</option>
+                        <option value="every">Every 10th message</option>
+                    </select>
+                </div>
+                <div class="input-group" id="specificWordsSection" style="display:none;">
+                    <label>Specific words (comma separated):</label>
+                    <input type="text" id="specificWords" placeholder="hello,bro,thanks,ok">
+                </div>
+                <div class="input-group">
+                    <label>Delay between reactions (seconds):</label>
+                    <input type="range" id="delaySlider" min="0.1" max="5" step="0.1" value="1">
+                    <span id="delayValue">1.0s</span>
+                </div>
+            </div>
+            
+            <!-- Automation Settings -->
+            <div class="control-group">
+                <h3>⚙️ AUTOMATION SETTINGS</h3>
+                <div class="input-group">
+                    <label>Reaction Mode:</label>
+                    <select id="reactionMode">
+                        <option value="random">Random emoji</option>
+                        <option value="sequence">Sequence (one by one)</option>
+                        <option value="all">React with all emojis</option>
+                        <option value="specific">Specific emoji only</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Maximum reactions per day:</label>
+                    <input type="number" id="maxReactions" min="10" max="10000" value="1000">
+                </div>
+                <div class="input-group">
+                    <label>Stop after:</label>
+                    <input type="number" id="stopAfter" min="1" max="24" value="2"> hours
+                </div>
+                <div class="presets">
+                    <div class="preset-btn" onclick="loadPreset('love')">❤️ Love Mode</div>
+                    <div class="preset-btn" onclick="loadPreset('laugh')">😂 Laugh Mode</div>
+                    <div class="preset-btn" onclick="loadPreset('hype')">🔥 Hype Mode</div>
+                    <div class="preset-btn" onclick="loadPreset('spam')">🚀 Spam Mode</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 30px 0;">
+            <button class="btn" onclick="startReacting()" id="startBtn">🚀 START AUTO REACT</button>
+            <button class="btn btn-stop" onclick="stopReacting()" id="stopBtn" disabled>⏹️ STOP REACTING</button>
+            <button class="btn" onclick="testReaction()">🧪 TEST REACTION</button>
+            <button class="btn" onclick="clearLogs()">🗑️ CLEAR LOGS</button>
+        </div>
+        
+        <!-- Statistics -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Total Reactions Sent</div>
+                <div class="stat-value" id="totalReactions">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Time</div>
+                <div class="stat-value" id="activeTime">0s</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Success Rate</div>
+                <div class="stat-value" id="successRate">100%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Current Emoji</div>
+                <div class="stat-value" id="currentEmoji">-</div>
+            </div>
+        </div>
+        
+        <!-- Log Section -->
+        <div class="log-section">
+            <h3>📝 ACTIVITY LOG</h3>
+            <div id="activityLog">
+                <div class="log-entry">
+                    <span class="log-time">[System]</span>
+                    <span class="log-message">Whatsplode Auto React initialized. Ready to connect.</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 30px; color: #aaa; font-size: 12px;">
+            <p>⚠️ Use responsibly. Don't spam. For educational purposes only.</p>
+            <p>Made with ❤️ by WHATSPLODE Team</p>
+        </div>
+    </div>
+
+    <script>
+        // State Management
+        let state = {
+            connected: false,
+            reacting: false,
+            selectedEmojis: ['😂', '❤️', '🔥', '👍', '🎉', '😍', '🤣', '😎', '👏', '🙏'],
+            currentEmojiIndex: 0,
+            totalReactions: 0,
+            startTime: null,
+            timerInterval: null,
+            reactionInterval: null,
+            ws: null,
+            qrCode: null
+        };
+        
+        // DOM Elements
+        const elements = {
+            qrCode: document.getElementById('qrCode'),
+            statusIndicator: document.getElementById('statusIndicator'),
+            connectionStatus: document.getElementById('connectionStatus'),
+            emojiGrid: document.getElementById('emojiGrid'),
+            totalReactions: document.getElementById('totalReactions'),
+            activeTime: document.getElementById('activeTime'),
+            successRate: document.getElementById('successRate'),
+            currentEmoji: document.getElementById('currentEmoji'),
+            activityLog: document.getElementById('activityLog'),
+            startBtn: document.getElementById('startBtn'),
+            stopBtn: document.getElementById('stopBtn'),
+            delaySlider: document.getElementById('delaySlider'),
+            delayValue: document.getElementById('delayValue'),
+            specificWordsSection: document.getElementById('specificWordsSection'),
+            reactTarget: document.getElementById('reactTarget')
+        };
+        
+        // Initialize
+        function init() {
+            // Generate QR Code
+            generateQR();
+            
+            // Initialize emoji grid
+            renderEmojiGrid();
+            
+            // Setup event listeners
+            elements.delaySlider.addEventListener('input', updateDelayValue);
+            elements.reactTarget.addEventListener('change', toggleSpecificWords);
+            
+            // Update stats every second
+            state.timerInterval = setInterval(updateStats, 1000);
+            
+            addLog('[System] WhatsApp Auto React initialized');
+        }
+        
+        // Generate QR Code
+        function generateQR() {
+            // Generate random session ID
+            const sessionId = 'whatsplode_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            // Clear previous QR
+            elements.qrCode.innerHTML = '';
+            
+            // Generate QR Code with session data
+            const qrData = JSON.stringify({
+                type: 'whatsapp_connect',
+                session_id: sessionId,
+                timestamp: Date.now(),
+                server: window.location.hostname || 'localhost'
+            });
+            
+            QRCode.toCanvas(elements.qrCode, qrData, {
+                width: 250,
+                height: 250,
+                color: {
+                    dark: '#000000',
+                    light: '#FFFFFF'
+                }
+            }, function(error) {
+                if (error) {
+                    console.error('QR Code error:', error);
+                    elements.qrCode.innerHTML = '<div style="color:red;padding:50px;">QR Code Error</div>';
+                } else {
+                    addLog('[QR] New QR Code generated. Scan with WhatsApp');
+                    
+                    // Simulate connection after 5 seconds (for demo)
+                    setTimeout(() => {
+                        simulateConnection();
+                    }, 5000);
+                }
+            });
+        }
+        
+        // Simulate WhatsApp connection (for demo)
+        function simulateConnection() {
+            if (!state.connected) {
+                state.connected = true;
+                elements.statusIndicator.textContent = '🟢 CONNECTED';
+                elements.statusIndicator.classList.add('active');
+                elements.connectionStatus.innerHTML = '✅ WhatsApp connected successfully!';
+                elements.connectionStatus.classList.add('connected');
+                
+                addLog('[WhatsApp] Connection established');
+                addLog('[System] Ready to auto-react to messages');
+            }
+        }
+        
+        // Render emoji grid
+        function renderEmojiGrid() {
+            elements.emojiGrid.innerHTML = '';
+            state.selectedEmojis.forEach((emoji, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'emoji-btn';
+                btn.textContent = emoji;
+                btn.dataset.index = index;
+                
+                btn.addEventListener('click', () => {
+                    // Toggle selection
+                    if (state.selectedEmojis.includes(emoji)) {
+                        // Remove if already selected
+                        state.selectedEmojis = state.selectedEmojis.filter(e => e !== emoji);
+                        btn.classList.remove('active');
+                    } else {
+                        // Add if not selected
+                        state.selectedEmojis.push(emoji);
+                        btn.classList.add('active');
+                    }
+                    addLog(`[Emoji] Updated: ${state.selectedEmojis.length} emojis selected`);
+                });
+                
+                elements.emojiGrid.appendChild(btn);
+            });
+        }
+        
+        // Update emoji list from custom input
+        function updateEmojiList() {
+            const customInput = document.getElementById('customEmojis').value;
+            if (customInput.trim()) {
+                const customEmojis = customInput.split(',').map(e => e.trim()).filter(e => e);
+                state.selectedEmojis = [...new Set([...state.selectedEmojis, ...customEmojis])];
+                renderEmojiGrid();
+                addLog(`[Emoji] Added custom emojis: ${customEmojis.join(', ')}`);
+            }
+        }
+        
+        // Start auto reacting
+        function startReacting() {
+            if (!state.connected) {
+                alert('Please connect WhatsApp first!');
+                return;
+            }
+            
+            if (state.selectedEmojis.length === 0) {
+                alert('Please select at least one emoji!');
+                return;
+            }
+            
+            const targetName = document.getElementById('targetName').value;
+            if (!targetName) {
+                alert('Please enter target person/group name!');
+                return;
+            }
+            
+            state.reacting = true;
+            state.startTime = Date.now();
+            state.totalReactions = 0;
+            
+            // Disable start button, enable stop button
+            elements.startBtn.disabled = true;
+            elements.stopBtn.disabled = false;
+            
+            // Get settings
+            const delay = parseFloat(elements.delaySlider.value) * 1000;
+            const reactTarget = elements.reactTarget.value;
+            const reactionMode = document.getElementById('reactionMode').value;
+            const maxReactions = parseInt(document.getElementById('maxReactions').value);
+            
+            addLog(`[System] Started auto-react on "${targetName}"`);
+            addLog(`[Settings] Mode: ${reactionMode}, Delay: ${delay/1000}s`);
+            
+            // Start reaction interval
+            state.reactionInterval = setInterval(() => {
+                if (!state.reacting) return;
+                
+                // Check max reactions
+                if (state.totalReactions >= maxReactions) {
+                    stopReacting();
+                    addLog('[System] Stopped: Maximum reactions reached');
+                    return;
+                }
+                
+                // Select emoji based on mode
+                let selectedEmoji;
+                switch(reactionMode) {
+                    case 'random':
+                        selectedEmoji = state.selectedEmojis[Math.floor(Math.random() * state.selectedEmojis.length)];
+                        break;
+                    case 'sequence':
+                        selectedEmoji = state.selectedEmojis[state.currentEmojiIndex];
+                        state.currentEmojiIndex = (state.currentEmojiIndex + 1) % state.selectedEmojis.length;
+                        break;
+                    case 'specific':
+                        selectedEmoji = state.selectedEmojis[0]; // First emoji
+                        break;
+                    case 'all':
+                        // React with all emojis (simulated)
+                        selectedEmoji = state.selectedEmojis.join('');
+                        break;
+                }
+                
+                // Simulate sending reaction
+                simulateSendReaction(targetName, selectedEmoji);
+                
+                // Update counter
+                state.totalReactions++;
+                elements.totalReactions.textContent = state.totalReactions;
+                elements.currentEmoji.textContent = selectedEmoji;
+                
+            }, delay);
+            
+            addLog('[System] Auto-react started successfully!');
+        }
+        
+        // Stop auto reacting
+        function stopReacting() {
+            state.reacting = false;
+            if (state.reactionInterval) {
+                clearInterval(state.reactionInterval);
+                state.reactionInterval = null;
+            }
+            
+            elements.startBtn.disabled = false;
+            elements.stopBtn.disabled = true;
+            
+            addLog('[System] Auto-react stopped');
+        }
+        
+        // Simulate sending reaction
+        function simulateSendReaction(target, emoji) {
+            // In a real implementation, this would use WhatsApp Web API
+            // For demo, we'll simulate it
+            
+            const success = Math.random() > 0.1; // 90% success rate
+            
+            if (success) {
+                addLog(`[Reaction] ✅ Reacted "${emoji}" to ${target}'s message`);
+            } else {
+                addLog(`[Reaction] ❌ Failed to react to ${target}'s message`);
+            }
+            
+            // Simulate message detection
+            const messages = [
+                "Hello everyone!",
+                "How are you?",
+                "Check this out!",
+                "Good morning!",
+                "Meeting at 3 PM",
+                "Thanks for the help!",
+                "Happy birthday!",
+                "New video uploaded!",
+                "Lets go!",
+                "Amazing work!"
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            // Check if we should react to this message
+            const reactTarget = elements.reactTarget.value;
+            const specificWords = document.getElementById('specificWords').value.toLowerCase().split(',');
+            
+            let shouldReact = true;
+            
+            switch(reactTarget) {
+                case 'specific':
+                    shouldReact = specificWords.some(word => 
+                        randomMessage.toLowerCase().includes(word.trim())
+                    );
+                    break;
+                case 'every':
+                    shouldReact = (state.totalReactions % 10 === 0);
+                    break;
+                // 'all' and 'sender' always react
+            }
+            
+            if (shouldReact && success) {
+                // In real implementation: document.querySelector('[data-testid="message-reaction"]').click()
+                console.log(`Reacting "${emoji}" to: "${randomMessage}"`);
+            }
+        }
+        
+        // Test reaction
+        function testReaction() {
+            const target = document.getElementById('targetName').value || 'Test Contact';
+            const emoji = state.selectedEmojis[0] || '👍';
+            simulateSendReaction(target, emoji);
+        }
+        
+        // Update stats
+        function updateStats() {
+            if (state.startTime) {
+                const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+                elements.activeTime.textContent = formatTime(elapsed);
+            }
+            
+            // Update success rate (simulated)
+            const rate = Math.min(100, 90 + Math.random() * 10);
+            elements.successRate.textContent = rate.toFixed(1) + '%';
+        }
+        
+        // Format time
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            
+            if (h > 0) return `${h}h ${m}m ${s}s`;
+            if (m > 0) return `${m}m ${s}s`;
+            return `${s}s`;
+        }
+        
+        // Update delay value display
+        function updateDelayValue() {
+            elements.delayValue.textContent = elements.delaySlider.value + 's';
+        }
+        
+        // Toggle specific words section
+        function toggleSpecificWords() {
+            if (elements.reactTarget.value === 'specific') {
+                elements.specificWordsSection.style.display = 'block';
+            } else {
+                elements.specificWordsSection.style.display = 'none';
+            }
+        }
+        
+        // Load preset
+        function loadPreset(preset) {
+            switch(preset) {
+                case 'love':
+                    state.selectedEmojis = ['❤️', '😍', '💕', '🥰', '💖', '💘', '💝'];
+                    document.getElementById('reactionMode').value = 'random';
+                    document.getElementById('delaySlider').value = '0.5';
+                    updateDelayValue();
+                    break;
+                    
+                case 'laugh':
+                    state.selectedEmojis = ['😂', '🤣', '😆', '😄', '😅', '😁', '🙃'];
+                    document.getElementById('reactionMode').value = 'sequence';
+                    document.getElementById('delaySlider').value = '0.3';
+                    updateDelayValue();
+                    break;
+                    
+                case 'hype':
+                    state.selectedEmojis = ['🔥', '🚀', '💯', '⭐', '🎉', '✨', '🌟'];
+                    document.getElementById('reactionMode').value = 'all';
+                    document.getElementById('delaySlider').value = '0.2';
+                    updateDelayValue();
+                    break;
+                    
+                case 'spam':
+                    state.selectedEmojis = ['👍', '👌', '👏', '🙌', '🤝', '💪', '✌️'];
+                    document.getElementById('reactionMode').value = 'random';
+                    document.getElementById('delaySlider').value = '0.1';
+                    updateDelayValue();
+                    document.getElementById('maxReactions').value = '5000';
+                    break;
+            }
+            
+            renderEmojiGrid();
+            addLog(`[Preset] Loaded ${preset} mode`);
+        }
+        
+        // Add log entry
+        function addLog(message) {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+            
+            entry.innerHTML = `
+                <span class="log-time">[${time}]</span>
+                <span class="log-message">${message}</span>
+            `;
+            
+            elements.activityLog.appendChild(entry);
+            elements.activityLog.scrollTop = elements.activityLog.scrollHeight;
+        }
+        
+        // Clear logs
+        function clearLogs() {
+            elements.activityLog.innerHTML = `
+                <div class="log-entry">
+                    <span class="log-time">[System]</span>
+                    <span class="log-message">Logs cleared</span>
+                </div>
+            `;
+        }
+        
+        // Initialize on load
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
